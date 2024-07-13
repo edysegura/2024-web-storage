@@ -8,11 +8,15 @@ class App {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       console.log('form submitted');
-      console.log(form.key.value);
-      console.log(form.keyValue.value);
+      this.save({ key: form.key.value, value: form.keyValue.value });
       form.reset();
       form.key.focus();
     });
+  }
+
+  save(data) {
+    console.log('saving data...');
+    console.log({ data });
   }
 }
 
