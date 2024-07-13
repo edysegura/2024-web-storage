@@ -5,12 +5,18 @@ const image = document.querySelector('img');
 button.addEventListener('click', async () => {
   console.count('👀 Button clicked!');
   setLoadingStatus();
-  const poke = await fetchPokeData({ pokeId: 1 });
+  const poke = await fetchPokeData({
+    pokeId: randomPokeNumber(),
+  });
   showCharacterData(poke);
 });
 
 function setLoadingStatus() {
   header.textContent = 'loading...';
+}
+
+function randomPokeNumber() {
+  return Math.floor(Math.random() * 151 + 1);
 }
 
 function showCharacterData(pokemon) {
