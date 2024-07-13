@@ -1,20 +1,28 @@
 const button = document.getElementById('fetchData');
+const header = document.querySelector('header');
+const output = document.querySelector('output');
 
-button.addEventListener('click', () => {
+button.addEventListener('click', async () => {
   console.count('👀 Button clicked!');
-  fetchCharacterData({ charId: 1 });
-  fetchCharacterData({ charId: 2 });
-  fetchCharacterData({ charId: 3 });
-  fetchCharacterData({ charId: 4 });
-  fetchCharacterData({ charId: 5 });
-  fetchCharacterData({ charId: 6 });
-  console.log('✅ Finished');
+  setLoadingStatus();
+  const poke = await fetchPokeData({ pokeId: 1 });
+  showCharacterData(poke);
 });
 
-async function fetchCharacterData({ charId }) {
-  const endpoint = `https://swapi.dev/api/people/${charId}`;
-  console.log(`[fetchCharacterData] #${charId}`);
+function setLoadingStatus() {
+  output.textContent = header.textContent = 'loading...';
+}
+
+function showCharacterData(character) {
+  header.textContent = character.name;
+  output.textContent = JSON.stringify(character, null, 2);
+}
+
+async function fetchPokeData({ pokeId }) {
+  const endpoint = `https://pokeapi.co/api/v2/pokemon/${pokeId}`;
+  console.log(`[fetchCharacterData] #${pokeId}`);
   const response = await fetch(endpoint);
-  const character = await response.json();
-  console.log(`🤺 Character name (${charId}): ${character.name}`);
+  const pokemon = await response.json();
+  console.log(`🤺 Character name (${pokeId}): ${pokemon.name}`);
+  return pokemon;
 }
