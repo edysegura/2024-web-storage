@@ -27,19 +27,25 @@ class App {
     if (!ls.length) return;
     const lsKeys = Object.keys(ls);
     const allValues = lsKeys.map(this.toHTML).join('');
-    // this.addToHTML(allValues);
+    this.addToHTML(allValues);
   }
 
   toHTML(key) {
     const value = window.localStorage.getItem(key);
-    const html = `<p>${key}: ${value}</p>`;
+    const html = `
+      <tr>
+        <th scope="row">${key}</th>
+        <td>${value}</td>
+        <td style="cursor: pointer">🗑️</td>
+      </tr>
+    `;
     return html;
   }
 
   addToHTML(allValues) {
     console.log('adding to HTML...');
     const listValues = document.getElementById('listValues');
-    listValues.innerHTML;
+    listValues.innerHTML = '';
     listValues.insertAdjacentHTML('beforeend', allValues);
   }
 }
