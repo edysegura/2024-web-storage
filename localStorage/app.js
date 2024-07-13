@@ -18,19 +18,13 @@ class App {
 
   save({ key, value }) {
     console.log('saving data...');
-    console.log({ key, value });
     window.localStorage.setItem(key, value);
   }
 
   listValues() {
-    // for (let i = 0; i < localStorage.length; i++) {
-    //   console.log(localStorage.getItem(localStorage.key(i)));
-    // }
+    console.log('listing data...');
     const ls = window.localStorage;
-    const lsKeys = [];
-    for (let i = 0; i < ls.length; i++) {
-      lsKeys.push(localStorage.key(i));
-    }
+    const lsKeys = Object.keys(ls);
     console.log(lsKeys);
   }
 }
