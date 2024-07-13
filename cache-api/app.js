@@ -23,7 +23,16 @@ function randomPokeNumber() {
 
 function showCharacterData(pokemon) {
   header.textContent = pokemon.name;
-  image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
+  loadPokemonImage(pokemon);
+}
+
+async function loadPokemonImage(pokemon) {
+  const endpoint = pokemon.sprites.other['official-artwork'].front_default;
+  const response =
+    (await fetchFromCache(endpoint)) || (await fetchFromNetwork(endpoint));
+  const blob = await response.blob();
+  const imageUrl = URL.createObjectURL(blob);
+  image.src = imageUrl;
 }
 
 async function fetchPokeData({ pokeId }) {
@@ -45,18 +54,12 @@ async function fetchFromNetwork(endpoint) {
 }
 
 async function fetchFromCache(endpoint) {
-  const cache = await caches.open(`${CACHE_KEY}-JSON`);
+  const cache = await caches.open(CACHE_KEY);
   const response = await cache.match(endpoint);
   return response && response;
 }
 
 async function addToCache(key, response) {
-  const jsonCache = await caches.open(`${CACHE_KEY}-JSON`);
-  const imagesCache = await caches.open(`${CACHE_KEY}-IMAGES`);
-  jsonCache.put(key, response);
-  imagesCache.add(
-    `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${key
-      .split('/')
-      .pop()}.png`
-  );
+  const cache = await caches.open(CACHE_KEY);
+  cache.put(key, response);
 }
