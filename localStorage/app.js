@@ -67,4 +67,7 @@ class App {
   }
 }
 
+// TODO: edit values: fill the form, alter the value and save
+// TODO: use html5 dialog instead of confirm
+
 const app = new App();
