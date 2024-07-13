@@ -29,8 +29,9 @@ function showCharacterData(pokemon) {
 async function fetchPokeData({ pokeId }) {
   const endpoint = `https://pokeapi.co/api/v2/pokemon/${pokeId}`;
   console.log(`[fetchCharacterData] #${pokeId}`);
-  const pokemon =
+  const response =
     (await fetchFromCache(endpoint)) || (await fetchFromNetwork(endpoint));
+  const pokemon = await response.json();
   return pokemon;
 }
 
@@ -38,7 +39,7 @@ async function fetchFromNetwork(endpoint) {
   const response = await fetch(endpoint);
   if (response.ok) {
     addToCache(endpoint, response.clone());
-    return response.json();
+    return response;
   }
   throw new Error(`Not able to request: ${endpoint}`);
 }
@@ -46,7 +47,7 @@ async function fetchFromNetwork(endpoint) {
 async function fetchFromCache(endpoint) {
   const cache = await caches.open(`${CACHE_KEY}-JSON`);
   const response = await cache.match(endpoint);
-  return response && response.json();
+  return response && response;
 }
 
 async function addToCache(key, response) {
