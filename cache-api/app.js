@@ -1,6 +1,6 @@
 const button = document.getElementById('fetchData');
 const header = document.querySelector('header');
-const output = document.querySelector('output');
+const image = document.querySelector('img');
 
 button.addEventListener('click', async () => {
   console.count('👀 Button clicked!');
@@ -10,12 +10,12 @@ button.addEventListener('click', async () => {
 });
 
 function setLoadingStatus() {
-  output.textContent = header.textContent = 'loading...';
+  header.textContent = 'loading...';
 }
 
-function showCharacterData(character) {
-  header.textContent = character.name;
-  output.textContent = JSON.stringify(character, null, 2);
+function showCharacterData(pokemon) {
+  header.textContent = pokemon.name;
+  image.src = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemon.id}.png`;
 }
 
 async function fetchPokeData({ pokeId }) {
