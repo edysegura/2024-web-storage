@@ -23,9 +23,10 @@ class App {
     });
   }
 
-  save({ key, value }) {
-    console.log('saving data...');
-    set(key, value);
+  async save({ key, value }) {
+    console.log('saving data...', key, value);
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    set(key, value).then(() => console.log('value saved'));
   }
 
   async listValues() {
@@ -68,10 +69,10 @@ class App {
     listValues.innerHTML = '<td colSpan="4">No data available</td>';
   }
 
-  edit(key) {
+  async edit(key) {
     console.log(`editing the key: ${key}`);
     const form = document.querySelector('form');
-    const value = window.localStorage.getItem(key);
+    const value = await get(key);
     form.key.disabled = true;
     form.key.value = key;
     form.keyValue.value = value;
@@ -89,3 +90,5 @@ class App {
 // TODO: use html5 dialog instead of confirm
 
 const app = new App();
+// this is ugly, try to avoid it as much as possible
+window.app = app;
