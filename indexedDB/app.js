@@ -1,3 +1,5 @@
+import { get, set } from 'https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm';
+
 class App {
   constructor() {
     this.initializeForm();
