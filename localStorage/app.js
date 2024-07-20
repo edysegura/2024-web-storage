@@ -37,10 +37,13 @@ class App {
     const value = window.localStorage.getItem(key);
     const html = `
       <tr>
-        <th scope="row" onclick="app.edit('${key}')">${key}</th>
+        <th scope="row">${key}</th>
         <td>${value}</td>
-        <td style="cursor: pointer" onclick="app.delete('${key}')">
-          🗑️
+        <td style="width: 30px">
+          <span style="cursor: pointer" onclick="app.edit('${key}')">✏️</span>
+        </td>
+        <td style="width: 30px">
+          <span style="cursor: pointer" onclick="app.delete('${key}')">🗑️</span>
         </td>
       </tr>
     `;
@@ -56,7 +59,7 @@ class App {
 
   resetTable() {
     const listValues = document.getElementById('listValues');
-    listValues.innerHTML = '<td colSpan="3">No data available</td>';
+    listValues.innerHTML = '<td colSpan="4">No data available</td>';
   }
 
   edit(key) {
