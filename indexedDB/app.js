@@ -1,4 +1,8 @@
-import { get, set } from 'https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm';
+import {
+  get,
+  set,
+  entries,
+} from 'https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm';
 
 class App {
   constructor() {
@@ -11,8 +15,8 @@ class App {
     form.addEventListener('submit', (event) => {
       event.preventDefault();
       console.log('form submitted');
-      // this.save({ key: form.key.value, value: form.keyValue.value });
-      // this.listValues();
+      this.save({ key: form.key.value, value: form.keyValue.value });
+      this.listValues();
       form.reset();
       form.key.disabled = false;
       form.key.focus();
@@ -21,22 +25,22 @@ class App {
 
   save({ key, value }) {
     console.log('saving data...');
+    set(key, value);
   }
 
-  listValues() {
+  async listValues() {
     console.log('listing data...');
-    // const ls = window.localStorage;
-    // if (!ls.length) {
-    //   this.resetTable();
-    //   return;
-    // }
-    // const lsKeys = Object.keys(ls);
-    const allValues = lsKeys.map(this.toHTML).join('');
+    const keyValueList = await entries();
+    if (!keyValueList.length) {
+      this.resetTable();
+      return;
+    }
+    const allValues = keyValueList.map(this.toHTML).join('');
     this.addToHTML(allValues);
   }
 
-  toHTML(key) {
-    const value = window.localStorage.getItem(key);
+  toHTML(entry) {
+    const [key, value] = entry;
     const html = `
       <tr>
         <th scope="row">${key}</th>
