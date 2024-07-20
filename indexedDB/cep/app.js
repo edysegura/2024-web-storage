@@ -26,21 +26,18 @@ function cepFactory(cepData) {
   };
 }
 
-console.time('fetch data');
-const cepList = await extractCEPsOnly();
-const promiseList = await Promise.allSettled(cepList.map(fetchCEPData));
-const cepListData = promiseList
-  .filter((pl) => pl.status === 'fulfilled')
-  .map((pl) => pl.value);
-const cepMappedList = cepListData.map(cepFactory);
-console.timeEnd('fetch data');
+export async function installData() {
+  const cepList = await extractCEPsOnly();
+  const promiseList = await Promise.allSettled(cepList.map(fetchCEPData));
+  const onlyFulfilled = (result) => result.status === 'fulfilled';
+  const onlyValues = (result) => result.value;
+  const cepListData = promiseList.filter(onlyFulfilled).map(onlyValues);
+  const cepMappedList = cepListData.map(cepFactory);
+  const db = new Dexie('zipCodeDatabase');
 
-const db = new Dexie('zipCodeDatabase');
+  db.version(2).stores({
+    zipCode: '&zipCode,location',
+  });
 
-db.version(2).stores({
-  zipCode: '&zipCode,location',
-});
-
-console.time('Saving IndexedDB...');
-await db.zipCode.bulkPut(cepMappedList);
-console.timeEnd('Saving IndexedDB...');
+  return db.zipCode.bulkPut(cepMappedList);
+}
