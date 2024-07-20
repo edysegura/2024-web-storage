@@ -12,6 +12,7 @@ class App {
       this.save({ key: form.key.value, value: form.keyValue.value });
       this.listValues();
       form.reset();
+      form.key.disabled = false;
       form.key.focus();
     });
   }
@@ -63,7 +64,12 @@ class App {
   }
 
   edit(key) {
-    console.log(`Clicked to edit ${key}`);
+    console.log(`editing the key: ${key}`);
+    const form = document.querySelector('form');
+    const value = window.localStorage.getItem(key);
+    form.key.disabled = true;
+    form.key.value = key;
+    form.keyValue.value = value;
   }
 
   delete(key) {
