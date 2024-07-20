@@ -12,10 +12,10 @@ class App {
 
   initializeForm() {
     const form = document.querySelector('form');
-    form.addEventListener('submit', (event) => {
+    form.addEventListener('submit', async (event) => {
       event.preventDefault();
       console.log('form submitted');
-      this.save({ key: form.key.value, value: form.keyValue.value });
+      await this.save({ key: form.key.value, value: form.keyValue.value });
       this.listValues();
       form.reset();
       form.key.disabled = false;
@@ -25,8 +25,7 @@ class App {
 
   async save({ key, value }) {
     console.log('saving data...', key, value);
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    set(key, value).then(() => console.log('value saved'));
+    return set(key, value).then(() => console.log('value saved'));
   }
 
   async listValues() {
