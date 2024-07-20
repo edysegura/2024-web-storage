@@ -2,6 +2,7 @@ import {
   get,
   set,
   entries,
+  del,
 } from 'https://cdn.jsdelivr.net/npm/idb-keyval@6/+esm';
 
 class App {
@@ -77,15 +78,14 @@ class App {
     form.keyValue.value = value;
   }
 
-  delete(key) {
+  async delete(key) {
     if (confirm('Are you sure?')) {
-      // window.localStorage.removeItem(key);
-      // this.listValues();
+      await del(key);
+      this.listValues();
     }
   }
 }
 
-// TODO: edit values: fill the form, alter the value and save
 // TODO: use html5 dialog instead of confirm
 
 const app = new App();
