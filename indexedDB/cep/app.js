@@ -35,7 +35,7 @@ function fillTable(zipCodeData) {
 
 const form = document.querySelector('form');
 form.addEventListener('submit', async () => {
-  const zipCodeData = await getCepData(form.cep.value);
+  const zipCodeData = await getCepData(form.cep.value.replace('-', ''));
   fillTable(zipCodeData);
 });
 

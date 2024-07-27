@@ -42,8 +42,15 @@ export async function installData() {
   return db.zipCode.bulkPut(zipCodeMappedList);
 }
 
+async function saveToLocalDB(zipCodeData) {
+  const { default: getZipCodeDatabase } = await import('./database.js');
+  const db = await getZipCodeDatabase();
+  db.zipCode.add(zipCodeData).then((result) => console.log('Added ', result));
+}
+
 export async function getFromNetwork(zipCode) {
   const zipCodeData = await fetchZipCodeData(zipCode);
   const zipCodeMapped = zipCodeMapper(zipCodeData);
+  saveToLocalDB(zipCodeMapped);
   return zipCodeMapped;
 }
