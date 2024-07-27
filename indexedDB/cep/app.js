@@ -20,12 +20,17 @@ async function getCepData(zipCode) {
     zipCode: '&zipCode,location',
   });
   const zipCodeData = await db.zipCode.get(zipCode);
-  console.log(zipCodeData);
+  return zipCodeData;
+}
+
+function fillTable(zipCodeData) {
+  Object.keys(zipCodeData).forEach((key) => console.log(key));
 }
 
 const form = document.querySelector('form');
-form.addEventListener('submit', () => {
-  getCepData(form.cep.value);
+form.addEventListener('submit', async () => {
+  const zipCodeData = await getCepData(form.cep.value);
+  fillTable(zipCodeData);
 });
 
 // TODO: improve this code
