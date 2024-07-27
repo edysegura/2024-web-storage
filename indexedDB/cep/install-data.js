@@ -7,34 +7,43 @@ async function extractCEPsOnly() {
   return cepList;
 }
 
-export async function fetchCEPData(cep) {
+export async function fetchZipCodeData(zipCode) {
   await new Promise((resolve) => setTimeout(resolve, 400));
   // const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-  const response = await fetch(`https://brasilapi.com.br/api/cep/v1/${cep}`);
-  const data = await response.json();
-  return data;
+  const response = await fetch(
+    `https://brasilapi.com.br/api/cep/v1/${zipCode}`
+  );
+  return response.json();
 }
 
-export function cepFactory(cepData) {
+export function zipCodeMapper(zipCodeData) {
   return {
-    zipCode: cepData.cep.replace('-', ''),
-    state: cepData.uf || cepData.state,
-    location: cepData.localidade || cepData.city,
-    publicPlace: cepData.logradouro || cepData.street,
-    neighborhood: cepData.bairro || cepData.neighborhood,
-    phoneCode: cepData.ddd || '',
+    zipCode: zipCodeData.cep.replace('-', ''),
+    state: zipCodeData.uf || zipCodeData.state,
+    location: zipCodeData.localidade || zipCodeData.city,
+    publicPlace: zipCodeData.logradouro || zipCodeData.street,
+    neighborhood: zipCodeData.bairro || zipCodeData.neighborhood,
+    phoneCode: zipCodeData.ddd || '',
   };
 }
 
 export async function installData() {
   const cepList = await extractCEPsOnly();
-  const promiseList = await Promise.allSettled(cepList.map(fetchCEPData));
+  const promiseList = await Promise.allSettled(cepList.map(fetchZipCodeData));
   const onlyFulfilled = (result) => result.status === 'fulfilled';
   const onlyValues = (result) => result.value;
-  const cepListData = promiseList.filter(onlyFulfilled).map(onlyValues);
+  const zipCodeListData = promiseList.filter(onlyFulfilled).map(onlyValues);
   const onlyDataWithCEP = (cepData) => !!cepData.cep;
-  const cepMappedList = cepListData.filter(onlyDataWithCEP).map(cepFactory);
+  const zipCodeMappedList = zipCodeListData
+    .filter(onlyDataWithCEP)
+    .map(zipCodeMapper);
   const { default: getZipCodeDatabase } = await import('./database.js');
   const db = await getZipCodeDatabase();
-  return db.zipCode.bulkPut(cepMappedList);
+  return db.zipCode.bulkPut(zipCodeMappedList);
+}
+
+export async function getFromNetwork(zipCode) {
+  const zipCodeData = await fetchZipCodeData(zipCode);
+  const zipCodeMapped = zipCodeMapper(zipCodeData);
+  return zipCodeMapped;
 }
