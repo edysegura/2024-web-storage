@@ -24,7 +24,14 @@ async function getCepData(zipCode) {
 }
 
 function fillTable(zipCodeData) {
-  Object.keys(zipCodeData).forEach((key) => console.log(key));
+  // this is necessary because we don't have phone number for now
+  delete zipCodeData.phoneCode;
+  const addToTheTable = (key) => {
+    console.log(`${key}: ${zipCodeData[key]}`);
+    const tdElement = document.getElementById(key);
+    tdElement.textContent = zipCodeData[key];
+  };
+  Object.keys(zipCodeData).forEach(addToTheTable);
 }
 
 const form = document.querySelector('form');
@@ -34,5 +41,5 @@ form.addEventListener('submit', async () => {
 });
 
 // TODO: improve this code
-// TODO: fill the table
 // TODO: if not find in the indexedDB fetch from the network and save into the table
+// TODO: format CEP data to show in the table
