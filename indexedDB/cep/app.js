@@ -33,16 +33,18 @@ linkToInstall.addEventListener('click', async () => {
   // button.removeAttribute('aria-busy');
 });
 
+function setLoading(isLoading) {
+  const submitButton = document.querySelector("button[type='submit']");
+  submitButton.setAttribute('aria-busy', isLoading);
+  submitButton.disabled = isLoading;
+}
+
 const form = document.querySelector('form');
-const submitButton = document.querySelector("button[type='submit']");
-form.addEventListener('submit', async () => {
-  // set load true
-  submitButton.setAttribute('aria-busy', true);
-  submitButton.disabled = true;
+form.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  setLoading(true);
   const zipCodeData = await getCepData(form.cep.value.replace('-', ''));
-  // set load off
-  submitButton.setAttribute('aria-busy', false);
-  submitButton.disabled = false;
+  setLoading(false);
   fillTable(zipCodeData);
 });
 
