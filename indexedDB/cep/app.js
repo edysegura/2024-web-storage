@@ -48,5 +48,5 @@ form.addEventListener('submit', async (event) => {
   fillTable(zipCodeData);
 });
 
-// TODO: improve this code
+// TODO: improve this code, use class such as HTMLService, ZipCodeService and so on
 // TODO: format CEP data to show in the table
